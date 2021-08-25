@@ -1,13 +1,16 @@
 export class Api {
-    constructor(options) {
-        this.headers = options.headers;
-        this.baseUrl = options.baseUrl;
+    constructor(baseUrl, contentType) {
+        this.baseUrl = baseUrl;
+        this.contentType = contentType;
     }
 
 
     getInitialCards() {
         return fetch(`${this.baseUrl}/cards`, {
-                headers: this.headers
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            }
             })
             .then(this._checkResult)
     }
@@ -15,16 +18,22 @@ export class Api {
     getUserInfo() {
         return fetch(`${this.baseUrl}/users/me`, {
                 method: 'GET',
-                headers: this.headers
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            }
             })
             .then(this._checkResult)
 
     }
 
-    setUserInfo(newName, newAbout) {
+    setUserInfo(newName, newAbout, token) {
         return fetch(`${this.baseUrl}/users/me`, {
                 method: "PATCH",
-                headers: this.headers,
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            },
                 body: JSON.stringify({
                     name: newName,
                     about: newAbout
@@ -37,7 +46,10 @@ export class Api {
     updateAvatarImage(data) {
         return fetch(`${this.baseUrl}/users/me/avatar`, {
                 method: 'PATCH',
-                headers: this.headers,
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            },
                 body: JSON.stringify(data)
             })
             .then(this._checkResult)
@@ -47,7 +59,10 @@ export class Api {
     addCard(name, link) {
         return fetch(`${this.baseUrl}/cards`, {
                 method: 'POST',
-                headers: this.headers,
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            },
                 body: JSON.stringify({
                     name: name,
                     link: link
@@ -58,10 +73,13 @@ export class Api {
 
     }
 
-    deleteCard(cardId) {
+    deleteCard(cardId, token) {
         return fetch(`${this.baseUrl}/cards/${cardId}`, {
                 method: 'DELETE',
-                headers: this.headers,
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            },
 
             })
             .then(this._checkResult)
@@ -71,7 +89,10 @@ export class Api {
     addLike(cardId) {
         return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
                 method: 'PUT',
-                headers: this.headers,
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            }
             })
             .then(this._checkResult)
 
@@ -79,7 +100,10 @@ export class Api {
     removeLike(cardId) {
         return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
                 method: 'DELETE',
-                headers: this.headers,
+            credentials: 'include',
+            headers:{
+                'Content-Type': this.contentType,
+            }
 
             })
             .then(this._checkResult)
@@ -95,23 +119,20 @@ export class Api {
 
 
 
-    changeLikeCardStatus(cardId, isLiked) {
+    changeLikeCardStatus(cardId, isLiked, token) {
         if (isLiked) {
-            return this.addLike(cardId)
+            return this.addLike(cardId, token)
         } else {
-            return this.removeLike(cardId)
+            return this.removeLike(cardId, token)
         }
     };
 
 }
 
-const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-20',
-    headers: {
-        authorization: 'dc63b407-867c-4698-ab85-c3ed97052e84',
-        'Content-type': 'application/json'
-    }
-});
+const api = new Api(
+    '##########',
+    'application/json'
+);
 
 export default api;
 

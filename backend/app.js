@@ -27,7 +27,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(cors({
-  origin: '######',
+  origin: 'https://agroball.sharli.nomoredomains.work',
   credentials: true,
 }));
 

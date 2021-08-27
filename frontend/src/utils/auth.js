@@ -9,6 +9,14 @@ export const register = (email, password) => {
         },
         body: JSON.stringify({email, password})
     })
+        .then(res => {
+            if (!res.ok) {
+                return Promise.reject(res.status)
+            } else {
+                console.log(res)
+                return res.json();
+            }
+        })
 };
 
 export const authorize = (email, password) => {
@@ -20,18 +28,9 @@ export const authorize = (email, password) => {
         },
         body: JSON.stringify({ email, password })
     })
-        .then((res) => {
-            if (res.status === 400) {
-                throw new Error('Не все поля заполнены');
-            } else if (res.status === 401) {
-                throw new Error('Email не зарегистрирован');
-            } else return res.json();
-        })
-        .then((data) => {
-            console.log(data)
-            if (data.token) {
-                localStorage.setItem('jwt', data.token);
-                return data.token;
+        .then(res => {
+            if (!res.ok) {
+                return Promise.reject(res.status)
             }
         })
 }

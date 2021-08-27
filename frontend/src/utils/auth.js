@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://agroball.sharli.nomoredomains.work';
+export const BASE_URL = 'https://api.agroball.sharli.nomoredomains.club';
 
 export const register = (email, password) => {
     return fetch(`${BASE_URL}/signup`, {

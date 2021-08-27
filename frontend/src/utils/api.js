@@ -130,7 +130,7 @@ export class Api {
 }
 
 const api = new Api(
-    'https://agroball.sharli.nomoredomains.work/',
+    'https://api.agroball.sharli.nomoredomains.club',
     'application/json'
 );
 

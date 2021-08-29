@@ -16,17 +16,13 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUser = (req, res, next) => {
+module.exports.getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail(() => {
       throw new NotFoundError('Пользователь с таким ID не найден');
     })
-    .then((user) => res.send(user))
-    .catch((err) => {
-      throw new NotFoundError(err.message);
-    })
-    .catch(next);
+    .then((user) => res.send(user));
 };
 
 module.exports.getProfileMe = (req, res, next) => {
@@ -38,20 +34,17 @@ module.exports.getProfileMe = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      throw new NotFoundError(err.message);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  if (!email || !password) {
-    throw new AuthError('Отсутствуют почта или пароль');
-  }
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       email,
@@ -62,14 +55,13 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then((user) => res.send({ data: { email: user.email, name: user.name } }))
     .catch((err) => {
-      if (err.name === 'MongoError' || err.code === 11000) {
-        throw new EmailError('Пользователь с таким email уже существует');
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else if (err.name === 'MongoError') {
+        next(new EmailError('Эта почта уже используется'));
       }
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Передана некорретная почта или пароль');
-      }
-    })
-    .catch(next);
+      next(err);
+    });
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -82,11 +74,11 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      throw new NotFoundError(err.message);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -100,33 +92,32 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      throw new NotFoundError(err.message);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    throw new AuthError('Не указаны логин или пароль');
-  }
-  User.findOne({ email })
-    .select('+password')
-    .orFail(() => {
-      throw new AuthError('Не найден пользователь с такой почтой');
-    })
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      bcrypt.compare(password, user.password, (err, isValid) => {
-        if (!isValid) {
-          next(new AuthError('Пароль некорректный'));
-        }
-        const userToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
-          expiresIn: '7d',
-        });
-        res.send({ token: userToken });
-      });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+      res.cookie('jwt', 'Bearer ' + token, { // eslint-disable-line
+        maxAge: 3600000,
+        secure: true,
+        httpOnly: true,
+        sameSite: 'None',
+      })
+        .end();
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'Error') next(new AuthError('Неправильные почта или пароль'));
+      next(err);
+    });
 };

@@ -14,16 +14,14 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   cardSchema.create({ name, link, owner })
-    .then((card) => cardSchema.findById(card._id)
-      .populate(['owner', 'likes'])
-      .then((cards) => res.send(cards))
-      .catch((err) => {
-        if (err.name === 'ValidationError' || err.name === 'CastError') {
-          throw new BadRequestError('Переданы некорректные данные');
-        }
-      })
-      .catch(next))
-    .catch(next);
+    .then((cards) => res.send(cards))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -44,12 +42,12 @@ module.exports.deleteCard = (req, res, next) => {
         })
         .then((cards) => res.send(cards))
         .catch((err) => {
-          if (err.name === 'ValidationError' || err.name === 'CastError') {
-            throw new BadRequestError('Переданы некорректные данные');
+          if (err.name === 'CastError') {
+            next(new BadRequestError('Переданы некорректные данные'));
+          } else {
+            next(err);
           }
-          throw new NotFoundError(err.message);
-        })
-        .catch(next);
+        });
     })
     .catch(next);
 };
@@ -67,11 +65,11 @@ module.exports.likeCard = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      throw new NotFoundError(err.message);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.dislikeCard = (req, res, next) => {
@@ -87,9 +85,9 @@ module.exports.dislikeCard = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      throw new NotFoundError(err.message);
-    })
-    .catch(next);
+    });
 };

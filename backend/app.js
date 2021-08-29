@@ -35,7 +35,6 @@ app.use(requestLogger);
 app.use(helmet());
 app.use(express.json());
 
-
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -48,9 +47,9 @@ app.use(auth);
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 app.use(errorLogger);
+app.use('*', (req, res, next) => next(new NotFoundError('Ресурс не найден')));
 
 app.use(errors());
-app.use('*', (req, res, next) => next(new NotFoundError('Ресурс не найден')));
 app.use(errorAll);
 
 app.listen(PORT, () => {

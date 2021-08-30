@@ -7,6 +7,7 @@ const { PORT = 3000 } = process.env;
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
+const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
@@ -18,6 +19,9 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 app.use(cookieParser());
+
+app.use(bodyParser.json()); // для собирания JSON-формата
+app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,

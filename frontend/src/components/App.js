@@ -6,7 +6,7 @@ import Register from './Register';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import api from '../utils/api.js';
+import {api} from '../utils/api';
 import * as Auth from '../utils/auth';
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";

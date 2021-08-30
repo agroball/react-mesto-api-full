@@ -1,4 +1,4 @@
-export class Api {
+class Api {
     constructor(baseUrl, contentType) {
         this.baseUrl = baseUrl;
         this.contentType = contentType;
@@ -75,37 +75,37 @@ export class Api {
 
     deleteCard(cardId, token) {
         return fetch(`${this.baseUrl}/cards/${cardId}`, {
-                method: 'DELETE',
+            method: 'DELETE',
             credentials: 'include',
             headers:{
                 'Content-Type': this.contentType,
             },
 
-            })
+        })
             .then(this._checkResult)
 
     }
 
     addLike(cardId) {
-        return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
-                method: 'PUT',
+        return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+            method: 'PUT',
             credentials: 'include',
             headers:{
                 'Content-Type': this.contentType,
             }
-            })
+
+        })
             .then(this._checkResult)
 
     }
     removeLike(cardId) {
-        return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
-                method: 'DELETE',
+        return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+            method: 'DELETE',
             credentials: 'include',
             headers:{
                 'Content-Type': this.contentType,
             }
-
-            })
+        })
             .then(this._checkResult)
 
     }
@@ -114,10 +114,8 @@ export class Api {
         if (res.ok) {
             return res.json();
         }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return Promise.reject(`Ошибка ${res.status}`);
     };
-
-
 
     changeLikeCardStatus(cardId, isLiked, token) {
         if (isLiked) {
@@ -129,15 +127,10 @@ export class Api {
 
 }
 
-const api = new Api(
+export const api = new Api(
     'https://api.agroball.sharli.nomoredomains.club',
     'application/json'
 );
-
-export default api;
-
-
-
 
 // fetch('https://mesto.nomoreparties.co/v1/cohort-20/cards', {
 //         headers: {

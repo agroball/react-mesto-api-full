@@ -1,12 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 const NotFoundError = require('../errors/notFound');
 const AuthError = require('../errors/authError');
 const BadRequestError = require('../errors/BadRequest');
 const EmailError = require('../errors/EmailError');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 const opts = { new: true, runValidators: true };
 
@@ -16,6 +16,7 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
+// получение данных пользователя
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
@@ -41,19 +42,25 @@ module.exports.getProfileMe = (req, res, next) => {
     });
 };
 
+// создание пользователя
 module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      email,
-      password: hash,
       name,
       about,
       avatar,
+      email,
+      password: hash,
     }))
-    .then((user) => res.send({ data: { email: user.email, name: user.name } }))
+    .then((user) => {
+      res.status(201).send({
+        _id: user._id,
+        email: user.email,
+      });
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
@@ -63,7 +70,7 @@ module.exports.createUser = (req, res, next) => {
       next(err);
     });
 };
-
+// обновление данных профиля
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
   const owner = req.user._id;
@@ -80,7 +87,7 @@ module.exports.updateUser = (req, res, next) => {
       }
     });
 };
-
+// обновление данных аватара
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const owner = req.user._id;
@@ -99,6 +106,7 @@ module.exports.updateAvatar = (req, res, next) => {
     });
 };
 
+// логин
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)

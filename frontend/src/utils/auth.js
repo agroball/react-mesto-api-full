@@ -7,7 +7,7 @@ export const register = (email, password) => {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({email, password})
+        body: JSON.stringify({ email, password })
     })
         .then(res => {
             if (!res.ok) {
@@ -33,7 +33,7 @@ export const authorize = (email, password) => {
                 return Promise.reject(res.status)
             }
         })
-}
+};
 
 export const checkToken = () => {
     return fetch(`${BASE_URL}/users/me`, {

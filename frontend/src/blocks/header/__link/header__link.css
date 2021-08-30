@@ -1,14 +1,13 @@
-.header__link{
-    margin: 5px 0 0 0;
-    text-decoration: none;
-    color: #fff;
-  }
+.header__link {
+  display: block;
 
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  text-decoration: none;
+}
 
-@media screen and (max-width: 450px) {
-  .header__link {
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 17px;
-  }
+.header__link:hover {
+  opacity: 0.6;
+  transition: 0.6s linear;
 }

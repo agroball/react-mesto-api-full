@@ -1,76 +1,37 @@
-import React from 'react';
-import InputForm from './InputForm';
-import PopupWithForm from './PopupWithForm';
-
+import PopupWithForm from "./PopupWithForm.js";
+import React from "react";
 
 function AddPlacePopup(props) {
+    const [name, setName] = React.useState("");
+    const [link, setLink] = React.useState("");
 
-  /*переменные для управления инпутами*/
-  const [name, setName] = React.useState('');
-  const [link, setLink] = React.useState('');
+    function handleNameChange(e) {
+        setName(e.target.value);
+    }
+    function handleLinkChange(e) {
+        setLink(e.target.value);
+    }
 
-  /*функции для смены значений переменых из стейта*/
-  function handleName(e) {
-    setName(e.target.value);
-  }
+    function handleSubmit(e) {
+        e.preventDefault();
+        props.onAddPlace({name: name, link: link});
+    }
 
-  function handleLink(e) {
-    setLink(e.target.value);
-  }
-
-  /*отмена стандартного поведения + отправка введенных данных в инпуты на сервер*/
-  function handleSubmit(e) {
-    e.preventDefault();
-    props.onAddPlace({
-      name: name.trim(),
-      link: link,
-    });
-  }
-
-  /*очистка инпутов*/
-  React.useEffect(() => {
-    setName('');
-    setLink('');
-  }, [props.isOpen])
-
-
-  return (
+    return(
     <PopupWithForm
-      name="gallery"
-      title="Новая карточка"
-      button={props.buttonTitle}
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      escClose={props.escClose}
-      overlayClose={props.overlayClose}
-      onSubmit={handleSubmit}
-      isButtonActive={props.isButtonActive}
-      onButtonActive={props.onButtonActive}>
-      <InputForm
-        value={name}
-        onChange={handleName}
-        className="popup__name popup__name_gallery popup__input"
-        id="name-card"
-        type="text"
-        minLength="2"
-        maxLength="30"
-        placeholder="Название карточки"
-        name="input_name_gallery"
-        isOpen={props.isOpen}>
-      </InputForm>
-      <InputForm
-        value={link}
-        onChange={handleLink}
-        className="popup__job popup__link popup__input"
-        id="link-card"
-        type="url"
-        placeholder="Ссылка для картинки"
-        name="input_link_gallery"
+        name="add"
+        title="Новое Место"
+        button="Создать"
+        onSubmit={handleSubmit}
         isOpen={props.isOpen}
-        xName={link}>
-      </InputForm>
+        onClose={props.onClose}
+    >
+        <input id="title" name="title__add" type="text" minLength="2" maxLength="30" className="form__name" placeholder="Название" onChange={handleNameChange} value={name} required/>
+        <span id="title-error" className="error"/>
+        <input id="link" name="link__add" type="url" className="form__name" placeholder="Ссылка на картинку" onChange={handleLinkChange} value={link} required/>
+        <span id="link-error" className="error"/>
     </PopupWithForm>
-  );
+)
 }
 
 export default AddPlacePopup;

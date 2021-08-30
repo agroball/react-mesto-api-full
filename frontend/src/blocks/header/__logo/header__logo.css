@@ -1,30 +1,11 @@
 .header__logo {
-    background-image: url(../../../images/photo_2021-03-23_19-26-03.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 142px;
-    height: 33px;
-    padding-bottom: 41px;
+    width: 143px;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 320px) {
     .header__logo {
-        margin-left: 120px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .header__logo {
-        margin-left: 60px;
-    }
-}
-
-@media screen and (max-width: 450px) {
-    .header__logo {
-        background-size: contain;
-        margin-left: 27px;
-        padding-bottom: 31px;
-        max-width: 104px;
-        height: 24px;
+        width: 103px;
+        padding-left: 27px;
+        padding-top: 28px;
     }
 }

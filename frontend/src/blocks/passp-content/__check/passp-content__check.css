@@ -1,14 +1,9 @@
 .passp-content__check{
-  width: 358px;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-  margin-top: 15px;
-  text-align: center;
-}
-
-@media screen and (max-width: 450px) {
-  .passp-content__check{
-    margin-top: 20px;
-  }
+    width: 358px;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    margin-top: 15px;
+    text-align: center;
+    color: white;
 }

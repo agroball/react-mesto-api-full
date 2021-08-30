@@ -1,0 +1,5 @@
+    .gallery__wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin: 27px 20px 31px 21px;
+    }

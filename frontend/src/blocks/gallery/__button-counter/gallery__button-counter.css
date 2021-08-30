@@ -1,0 +1,9 @@
+.gallery__button-counter {
+    margin: 0 auto;
+    max-width: 10px;
+    color: black;
+    height: 13px;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+}

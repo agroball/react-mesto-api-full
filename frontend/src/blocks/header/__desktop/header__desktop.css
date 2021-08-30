@@ -1,0 +1,14 @@
+.header__desktop{
+  display: flex;
+  max-width: 880px;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+
+@media screen and (max-width: 720px) {
+  .header__desktop {
+    display: none;
+    max-width: 720px;
+  }
+}

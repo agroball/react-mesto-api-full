@@ -22,18 +22,28 @@ import Footer from "./Footer";
 
 function App() {
 
+    /*стейты для открытия попапов*/
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-    const [selectedCard, setSelectedCard] = React.useState({});
     const [isPopupWithImageOpen, setIsPopupWithImageOpen] = React.useState(false);
+    const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = React.useState(false);
+
+    /*стейты для данных профиля и карточек*/
+    const [selectedCard, setSelectedCard] = React.useState({});
     const [cards, setCards] = React.useState([]);
     const [currentUser, setCurrentUser] = React.useState({ name: '', about: ''});
-    const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = React.useState(false);
+
+    /*стейт для проверки авторизован ли пользователь*/
     const [loggedIn, setLoggedIn] = React.useState(false);
-    const [message, setMessage] = React.useState({ iconPath: '', text: '' });
+
+    /*стейты для контроля элемента link в компоненте Header*/
     const [email, setEmail] = React.useState('');
+
+
+    const [message, setMessage] = React.useState({ iconPath: '', text: '' });
     const history = useHistory();
+
 
     React.useEffect(() => {
         const jwt = localStorage.getItem('jwt');
@@ -79,6 +89,7 @@ function App() {
     function handleInfoTooltipPopupOpen() {
         setIsInfoTooltipPopupOpen(true);
     }
+
     function handleInfoTooltipContent({iconPath, text}) {
         setMessage({ iconPath: iconPath, text: text })
     }

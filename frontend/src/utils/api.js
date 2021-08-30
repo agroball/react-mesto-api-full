@@ -4,7 +4,6 @@ class Api {
         this.contentType = contentType;
     }
 
-
     getInitialCards() {
         return fetch(`${this.baseUrl}/cards`, {
             credentials: 'include',

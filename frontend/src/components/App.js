@@ -13,7 +13,7 @@ import Register from "./Register";
 import { api } from "../utils/api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
-import InfoToolTip from "./InfoTooltip";
+import InfoToolTip from "./InfoToolTip";
 import successImage from "../images/success.svg";
 import failImage from "../images/fail.svg";
 import * as auth from "../utils/auth.js";

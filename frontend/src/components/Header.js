@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Hamburger } from './Hamburger';
 
+
 function Header(props) {
 
   /*стейт для смены состояния названия элемента link*/

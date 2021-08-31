@@ -1,6 +1,6 @@
 import React from 'react';
 
-function InfoTooltip(props) {
+function InfoToolTip(props) {
 
   /*добавляет слушатель для закрытия по Esc только при открытии попапа*/ 
   React.useEffect(() => {
@@ -10,7 +10,7 @@ function InfoTooltip(props) {
   return (
     <div className={`popup ${props.isOpen && 'popup_opened'}`} onClick={props.overlayClose}>
       <form className="popup__container popup__notification" name="popup_notification">
-        <button className="popup__close" type="button" onClick={props.onClose}></button>
+        <button className="popup__close" type="button" onClick={props.onClose}/>
         <img className="popup__image-notification" src={props.src} alt="Уведомление"/>
         <h2 className="popup__title popup__title-notification">{props.title}</h2>
       </form>
@@ -18,4 +18,4 @@ function InfoTooltip(props) {
   );
 }
 
-export default InfoTooltip;
+export default InfoToolTip;

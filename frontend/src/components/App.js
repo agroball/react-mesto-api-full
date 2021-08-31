@@ -13,7 +13,7 @@ import Register from "./Register";
 import { api } from "../utils/api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
-import InfoTooltip from "./InfoTooltip";
+import InfoToolTip from "./InfoTooltip";
 import successImage from "../images/success.svg";
 import failImage from "../images/fail.svg";
 import * as auth from "../utils/auth.js";
@@ -358,14 +358,14 @@ function App(props) {
         onClose={closeAllPopups}
         escClose={handleEscClose}
         overlayClose={handleOverlayClose} />
-      <InfoTooltip
+      <InfoToolTip
         isOpen={isSuccessPopupOpen}
         onClose={closeAllPopups}
         escClose={handleEscClose}
         overlayClose={handleOverlayClose}
         src={successImage}
         title="Вы успешно зарегистрировались!" />
-      <InfoTooltip
+      <InfoToolTip
         isOpen={isFailPopupOpen}
         onClose={closeAllPopups}
         escClose={handleEscClose}

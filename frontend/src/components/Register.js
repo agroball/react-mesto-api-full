@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Register({registration}) {
+function Register({onRegister}) {
     const [valueEmail, setValueEmail] = React.useState('');
     const [valuePassword, setValuePassword] = React.useState('');
 
@@ -17,7 +17,7 @@ function Register({registration}) {
         e.preventDefault()
         const email = valueEmail;
         const password = valuePassword;
-        registration(email, password)
+        onRegister(email, password)
     }
 
     return (

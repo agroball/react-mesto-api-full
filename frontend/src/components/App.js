@@ -44,21 +44,31 @@ function App() {
     const [message, setMessage] = React.useState({ iconPath: '', text: '' });
     const history = useHistory();
 
+    /*проверка токена для авторизованного пользователя*/
+    function handleTokenCheck() {
+        console.log(localStorage.getItem('Auth'))
+        if (localStorage.getItem('Auth')) {
+            Auth.checkToken()
+                .then((res) => {
+                    if (res) {
+                        setLoggedIn(true);
+                        history.push("/");
+                        setEmail(res.data.email);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
+        }
+    }
 
     React.useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
-        if (jwt) {
-            Auth.getContent(jwt)
-                .then((res) => {
-                    setLoggedIn(true);
-                    setEmail(res.data.email);
-                    history.push('/');
-                })
-                .catch(err => console.log(err));
-        }
+        handleTokenCheck();
     }, [history]);
 
 
+
+    /*получение данных о пользователе и карточек + использование их на странице*/
     React.useEffect(() => {
         const promises = [api.getUserInfo(), api.getInitialCards()];
         Promise.all(promises)
@@ -159,57 +169,62 @@ function App() {
             .catch((err) => console.log(err));
     }
 
-    // Регистрация
-    function registration(email, password) {
-        Auth.register(email, password).then((res) => {
-            if(res.status === 201){
+    /*регистрация пользователя*/
+    function handleRegister(email, password) {
+        Auth.register(email, password)
+            .then((res) => {
                 handleInfoTooltipContent({iconPath: RegOk, text: 'Вы успешно зарегистрировались!'})
                 handleInfoTooltipPopupOpen();
                 // Перенаправляем на страницу логина спустя 3сек и закрываем попап
                 setTimeout(history.push, 3000, "/sign-in");
                 setTimeout(closeAllPopups, 2500);
-            }
-            if(res.status === 400) {
-                console.log('Введный емейл ужезарегестрирован')
-            }
-        }).catch((err)=> {
-            handleInfoTooltipContent({iconPath: RegNoOK, text: 'Что-то пошло не так! Попробуйте ещё раз.'})
-            handleInfoTooltipPopupOpen();
-            setTimeout(closeAllPopups, 2500);
-            console.log(err)
-        })
+                history.push('/sign-in');
+            })
+            .catch((err) => {
+                handleInfoTooltipContent({iconPath: RegNoOK, text: 'Что-то пошло не так! Попробуйте ещё раз.'})
+                handleInfoTooltipPopupOpen();
+                setTimeout(closeAllPopups, 2500);
+                    console.log(err)
+                }
+            );
     }
 
-    // Авторизация
-    function authorization(email, password) {
-        Auth.authorize(email, password )
-            .then((data) => {
-                if (!data) {
-                    throw new Error('Произошла ошибка');
-                }
-                Auth.getContent(data)
-                    .then((res) => {
-                        setEmail(res.data.email);
-                    }).catch(err => console.log(err));
+    /*авторизация пользователя*/
+    function handleLogin(email, password) {
+        Auth.authorize(email, password)
+            .then((res) => {
+                setEmail(email);
                 setLoggedIn(true);
+                history.push('/');
+                localStorage.setItem('Auth', true);
                 handleInfoTooltipContent({iconPath: RegOk, text: 'Вы успешно авторизовались!'})
                 handleInfoTooltipPopupOpen();
                 // Перенаправляем на главную страницу спустя 3сек и закрываем попап
                 setTimeout(history.push, 3000, "/");
                 setTimeout(closeAllPopups, 2500);
-            }).catch((err) => {
-            handleInfoTooltipContent({iconPath: RegNoOK, text: 'Что то пошло не так! Попробуйте еще раз!'})
-            handleInfoTooltipPopupOpen();
-            console.log(err)
-        })
+            })
+            .catch((err) => {
+                    handleInfoTooltipContent({iconPath: RegNoOK, text: 'Что то пошло не так! Попробуйте еще раз!'})
+                    handleInfoTooltipPopupOpen();
+                    console.log(err)
+                }
+            );
     }
 
-    // Выход из учетки
+
+    /*обработка выхода пользователя из профиля*/
     function handleSignOut() {
-        setLoggedIn(false);
-        localStorage.removeItem('jwt');
-        setEmail('');
         history.push('/sign-in');
+        Auth.signOut()
+            .then((res) => {
+                setEmail('');
+                setLoggedIn(false);
+                localStorage.removeItem('Auth');
+            })
+            .catch((err) => {
+                    console.log(err)
+                }
+            );
     }
 
     return (
@@ -231,12 +246,12 @@ function App() {
             />}
             <Route path="/sign-in">
                 <Login
-                    authorization={authorization}
+                    onLogin={handleLogin}
                 />
             </Route>
             <Route path="/sign-up">
                 <Register
-                    registration={registration}
+                    onRegister={handleRegister}
                 />
             </Route>
             <Route path="/">

@@ -1,0 +1,12 @@
+.popup__submit_loading{
+  background-image:url(../../../../images/loading.gif);
+  background-size: 17px 17px;
+  background-position: 250px;
+  background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 768px) {
+  .popup__submit_loading {
+    background-position: 180px;
+  }
+}

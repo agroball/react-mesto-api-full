@@ -1,28 +1,40 @@
 import React from "react";
-import closeBtn from '../images/Close_Icon.svg';
 
 function PopupWithForm(props) {
 
-return (
+  const formRef = React.useRef();
+  const children = props.children;
+  const [buttonState, setButtonState] = React.useState(true);
 
-    <div className={`popup popup_type_${props.name} ${props.isOpen && 'popup_opened'}`} >
-        <div className={`popup__container ${props.container}`}>
-            <button  src={closeBtn}
-                     alt="Кнопка закрыть"
-                     className="popup__close-button"
-                     onClick={props.onClose}/>
-            <form  className="form"
-                   name={props.name}
-                   onSubmit={props.onSubmit}
-                   noValidate>
-                <h2 className="form__header">{props.title}</h2>
-                {props.children}
-                <button type="submit" className="form__button">{props.button}</button>
-            </form>
-        </div>
+ /*добавляет слушатель для закрытия по Esc только при открытии попапа*/ 
+  React.useEffect(() => {
+    props.escClose(props.isOpen);
+  }, [props.isOpen, props.escClose])
+
+  /*проверка полей формы на корректность для смены состояния кнопки(активна или нет)*/
+  React.useEffect(() => {
+    /*если реф привязан к форме, и все поля формы валидны, и инпуты содержат символы помимо пробелов*/
+    if (formRef.current && formRef.current.checkValidity() && Array.from(children).every((input) => input.props.value.trim() !== '')) {
+      setButtonState(false);
+      props.onButtonActive(false);
+    } else {
+      setButtonState(true);
+      props.onButtonActive(true);
+    }
+  })
+
+  return (
+    <div className={`popup popup_${props.name} ${props.isOpen && 'popup_opened'}`} onClick={props.overlayClose}>
+      <form ref={formRef} className={`popup__container popup__container_form popup__${props.name}-form`} name={`popup_${props.name}`} onSubmit={props.onSubmit} noValidate>
+        <button className="popup__close" type="button" onClick={props.onClose} ></button>
+        <h2 className={`popup__title popup__title-${props.name}`}>{props.title}</h2>
+        {children}
+        <button className={`popup__submit ${props.button.isLoad && 'popup__submit_loading'} ${props.isButtonActive && 'popup__button_invalid'}`} type="submit" disabled={buttonState}>
+          {props.button.buttonTitle}
+        </button>
+      </form>
     </div>
-
-);
-
+  );
 }
+
 export default PopupWithForm;

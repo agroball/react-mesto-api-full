@@ -1,0 +1,10 @@
+.header__hamburger{
+    display: none;
+justify-content: space-between;
+}
+
+@media screen and (max-width: 720px) {
+    .header__hamburger {
+      display: flex;
+    }
+  }

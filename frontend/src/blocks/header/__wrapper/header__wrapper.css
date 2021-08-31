@@ -1,0 +1,24 @@
+.header__wrapper{
+    display: flex;
+}
+
+@media screen and (max-width: 1024px) {
+    .header__wrapper {
+        margin-right: 120px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header__wrapper{
+        margin-right: 60px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .header__wrapper {
+        background-size: contain;
+        margin-right: 27px;
+        padding-bottom: 31px;
+       
+    }
+}

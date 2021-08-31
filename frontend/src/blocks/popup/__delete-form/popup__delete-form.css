@@ -1,0 +1,11 @@
+.popup__delete-form {
+    width: 394px;
+    padding: 0 0 0 36px;
+}
+
+@media screen and (max-width: 450px) {
+    .popup__delete-form {
+     width: 250px;
+     padding-left: 12px;
+    }
+}

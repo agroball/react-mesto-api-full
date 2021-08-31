@@ -1,0 +1,18 @@
+.gallery__button-delete {
+    background-image: url(../../../images/gallery__button-delete.png);
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0);
+    position: absolute;
+    top: 18px;
+    right: 15px;
+    width: 18px;
+    height: 19px;
+    border: 0;
+    outline: none;
+}
+
+.gallery__button-delete:hover {
+    opacity: 0.5;
+    transition-duration: 1s;
+    cursor: pointer;
+}

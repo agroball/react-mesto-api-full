@@ -1,19 +1,21 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 
+// Опишем схему:
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: true,
     minlength: 2,
     maxlength: 30,
-    required: true,
   },
   link: {
     type: String,
     required: true,
     validate: {
-      validator: (v) => validator.isURL(v),
-      message: 'Url должен быть ссылкой',
+      validator(url) {
+        return /(https?):\/\/\S{2,}\.\S{2,}/.test(url);
+      },
+      message: 'Неверный формат ссылки',
     },
   },
   owner: {
@@ -21,15 +23,16 @@ const cardSchema = new mongoose.Schema({
     ref: 'user',
     required: true,
   },
-  likes: [{
-    default: [],
-    type: mongoose.Schema.Types.ObjectId,
+  likes: {
+    type: mongoose.Schema.Types.Array,
     ref: 'user',
-  }],
+    default: [],
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
+// создаём модель и экспортируем её
 module.exports = mongoose.model('card', cardSchema);

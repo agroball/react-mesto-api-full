@@ -1,20 +1,21 @@
-import closeBtn from '../images/Close_Icon.svg';
-import React from "react";
+import React from 'react';
 
-function InfoTooltip ({onClose, isOpen, message}) {
+function InfoTooltip(props) {
 
-    return (
-        <div className={`popup ${isOpen ? 'popup_opened' : ''}`}>
-            <div className="popup__container popup__container_reg">
-                <img src={message.iconPath} alt="" className="popup__result-icon"/>
-                <p className="popup__title-info">{message.text}</p>
-                <button type="button"
-                        src={closeBtn}
-                        alt="Кнопка закрыть"
-                        className="popup__close-button" onClick={onClose} />
-            </div>
-        </div>
-    );
+  /*добавляет слушатель для закрытия по Esc только при открытии попапа*/ 
+  React.useEffect(() => {
+    props.escClose(props.isOpen);
+  }, [props.isOpen, props.escClose])
+
+  return (
+    <div className={`popup ${props.isOpen && 'popup_opened'}`} onClick={props.overlayClose}>
+      <form className="popup__container popup__notification" name="popup_notification">
+        <button className="popup__close" type="button" onClick={props.onClose}></button>
+        <img className="popup__image-notification" src={props.src} alt="Уведомление"/>
+        <h2 className="popup__title popup__title-notification">{props.title}</h2>
+      </form>
+    </div>
+  );
 }
 
-export default InfoTooltip ;
+export default InfoTooltip;

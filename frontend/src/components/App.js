@@ -19,6 +19,7 @@ import failImage from "../images/fail.svg";
 import * as auth from "../utils/auth.js";
 
 function App(props) {
+
   /*стейты для открытия попапов*/
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
@@ -27,18 +28,23 @@ function App(props) {
   const [isPopupWithImageOpen, setIsPopupWithImageOpen] = React.useState(false);
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = React.useState(false);
   const [isFailPopupOpen, setIsFailPopupOpen] = React.useState(false);
+
   /*стейты для данных профиля и карточек*/
   const [selectedCard, setSelectedCard] = React.useState({ link: "" });
   const [currentUser, setCurrentUser] = React.useState({ name: "", about: "", avatar: "" });
   const [cards, setCards] = React.useState([]);
+
   /*стейт для отображения загрузки данных*/
   const [loading, setLoading] = React.useState(false);
+
   /*стейты для контроля названия кнопок при отправке данных*/
   const [buttonSave, setButtonSave] = React.useState({ isLoad: false, buttonTitle: "Сохранить" });
   const [buttonAdd, setButtonAdd] = React.useState({ isLoad: false, buttonTitle: "Создать" });
   const [buttonDelete, setButtonDelete] = React.useState({ isLoad: false, buttonTitle: "Да" });
+
   /*стейт для проверки авторизован ли пользователь*/
   const [loggedIn, setLoggedIn] = React.useState(false);
+
   /*стейты для контроля состояния кнопок при валидации*/
   const [isButtonEdditProfile, setIsButtonEdditProfile] = React.useState(false);
   const [isButtonAddPlace, setIsButtonAddPlace] = React.useState(false);
@@ -49,6 +55,22 @@ function App(props) {
   const [exit, setExit] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [hamburger, setHamburger] = React.useState(false);
+
+  /*получение данных о пользователе и карточек + использование их на странице*/
+  React.useEffect(() => {
+    if(loggedIn){
+      setLoading(true);
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+          .then(([userInfo, cardList]) => {
+            setCurrentUser(userInfo);
+            setCards(cardList);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    }
+  }, [loggedIn]);
 
   /*функции открытия попапов*/
   function handleEditProfileClick() {
@@ -91,6 +113,7 @@ function App(props) {
     setIsSuccessPopupOpen(false);
     document.removeEventListener("keydown", escClose);
   }
+
   /*обработка нажатия на escape*/
   function escClose(evt) {
     if (evt.key === "Escape") {
@@ -115,23 +138,6 @@ function App(props) {
   function handleButton(isLoad, buttonTitle, setState) {
     setState({ isLoad: isLoad, buttonTitle: buttonTitle });
   }
-
-  /*получение данных о пользователе и карточек + использование их на странице*/
-  React.useEffect(() => {
-    if(loggedIn){
-    setLoading(true);
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userInfo, cardList]) => {
-        setCurrentUser(userInfo);
-        setCards(cardList);
-        setLoading(false);
-        console.log(cardList, userInfo);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-  }, [loggedIn]);
 
   /*функция постановки лайка*/
   function handleCardLike(card) {
@@ -204,7 +210,6 @@ function App(props) {
   }
   /*проверка токена для авторизованного пользователя*/
   function handleTokenCheck() {
-    console.log(localStorage.getItem('auth'))
     if (localStorage.getItem('auth')) {
       auth.checkToken()
       .then((res) => {

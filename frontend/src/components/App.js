@@ -1,3 +1,4 @@
+import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Main from "./Main";
@@ -11,7 +12,6 @@ import Login from "./Login";
 import Register from "./Register";
 import { api } from "../utils/api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import React from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import InfoTooltip from "./InfoTooltip";
 import successImage from "../images/success.svg";
